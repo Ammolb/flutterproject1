@@ -1,5 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'loginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'student_registration_page.dart';
+import 'strings_en.dart';
+import 'strings_hi.dart';
+import 'strings_mr.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,89 +14,146 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  Locale _locale = Locale('en');
+
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (_selectedIndex == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StudentRegistrationPage()),
+        );
+      }
+    });
+  }
+
+  // Function to change language
+  void _changeLanguage(String languageCode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('languageCode', languageCode);
+    setState(() {
+      _locale = Locale(languageCode);
+    });
+  }
+
+  @override
+  void initState() {
+    _getSavedLanguage();
+    super.initState();
+  }
+
+  // Function to retrieve saved language preference
+  void _getSavedLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('languageCode');
+    if (languageCode != null) {
+      setState(() {
+        _locale = Locale(languageCode);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.black, Colors.blueGrey],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, top: 50, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 100,
-                child: Row(
-                  children: [
-                    Image(
-                      image: AssetImage('assets/images/Group 2.png'),
-                      height: 80,
-                      width: 170,
-                    ),
-                    SizedBox(width: 35),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Image(
-                          image: AssetImage('assets/images/Rectangle 6.png'),
-                          height: 65,
-                          width: 85,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 25),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search Tasks',
-                          hintStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(Icons.search, color: Colors.white),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.settings),
-                      onPressed: () {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      locale: _locale,
+      supportedLocales: [
+        const Locale('en'),
+        const Locale('hi'),
+        const Locale('mr'),
+      ],
+      localizationsDelegates: [
 
-                      },
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        DefaultMaterialLocalizations.delegate,
+
+        DefaultCupertinoLocalizations.delegate,
+
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      builder: (context, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Home'),
           ),
-        ),
-      ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text('Drawer Header'),
+                ),
+                ListTile(
+                  title: Text('Item 1'),
+                  onTap: () {
+
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text('Item 2'),
+                  onTap: () {
+
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text('Change Language - English'),
+                  onTap: () {
+                    _changeLanguage('en');
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text('Change Language - Hindi'),
+                  onTap: () {
+                    _changeLanguage('hi');
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text('Change Language - Marathi'),
+                  onTap: () {
+                    _changeLanguage('mr');
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black, Colors.blueGrey],
+              ),
+            ),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.add),
+                label: 'Add',
+              ),
+
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.blue,
+            onTap: _onItemTapped,
+          ),
+        );
+      },
     );
   }
 }

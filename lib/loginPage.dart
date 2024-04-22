@@ -12,7 +12,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 92,
                   ),
                   SizedBox(height: 50),
-                  Text(
+                  const Text(
                     'Welcome Back!',
                     style: TextStyle(
                       color: Colors.white,
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         elevation: 3,
                         backgroundColor: Colors.yellowAccent,
                       ),
-                      child: Text(
+                      child: const Text(
                         'Login',
                         style: TextStyle(
                           color: Colors.black,
@@ -104,10 +104,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Text(
+                  const Text(
                     'Or Continue with',
                     style: TextStyle(
                       color: Colors.white,
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  Text(
+                  const Text(
                     "Sign up",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.yellow),
